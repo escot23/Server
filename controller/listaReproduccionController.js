@@ -27,6 +27,7 @@ const addVideoToLista = async (req, res) => {
     const { videoId, listaId } = req.body;
 
     try {
+        // Asegurarte de que tanto el video como la lista existen antes de intentar añadir
         const video = await Video.findById(videoId);
         if (!video) {
             return res.status(404).json({ message: "Video no encontrado" });
@@ -37,17 +38,23 @@ const addVideoToLista = async (req, res) => {
             return res.status(404).json({ message: "Lista de reproducción no encontrada" });
         }
 
-        if (!lista.videos.includes(video._id)) {
-            lista.videos.push(video._id);
-            await lista.save();
+        // Verificar si el video ya está en la lista para evitar duplicados
+        if (lista.videos.includes(video._id)) {
+            return res.status(409).json({ message: "El video ya está en la lista" });
         }
 
+        // Añadir el video a la lista y guardar los cambios
+        lista.videos.push(video._id);
+        await lista.save();
+
+        // Devolver la lista actualizada
         res.status(200).json(lista);
     } catch (error) {
         console.error('Error al añadir video a la lista:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+
 
 
 // Método para obtener todas las listas de reproducción de un usuario
@@ -250,7 +257,7 @@ const getListasReproduccionUsuario = async (req, res) => {
             _id: lista._id,
             nombre: lista.nombre,
             descripcion: lista.descripcion,
-            cantidadVideos: lista.videos.length  // Conteo de videos en cada lista
+            cantidadVideos: lista.videos.length  
         }));
 
         res.status(200).json(listasConConteo);

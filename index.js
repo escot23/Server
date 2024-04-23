@@ -27,7 +27,9 @@ const {
     GetVideo,
     PatchVideo,
     PutVideo,
-    BuscarVideos
+    BuscarVideos,
+    getVideosByLista,
+    getPlaylists
 } = require('./controller/videoController.js');
 
 const {
@@ -109,6 +111,8 @@ app.post('/videos', authenticateToken, PostVideo);
 app.get('/videos', authenticateToken, GetVideo);
 app.put('/videos/:id', authenticateToken, PatchVideo);
 app.delete('/videos/:id', authenticateToken, PutVideo);
+app.get('/playlists/:playlistId/videos',authenticateToken, getVideosByLista);
+app.get('/playlists', authenticateToken, getPlaylists);
 
 
 // Rutas para listas de reproducción
