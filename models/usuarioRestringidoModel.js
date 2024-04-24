@@ -20,7 +20,7 @@ const usuarioRestringidoSchema = new Schema({
     },
     usuarioPrincipal: {
         type: Schema.Types.ObjectId,
-        ref: 'UsuarioPrincipal' 
+        ref: 'User' 
     }
 });
 

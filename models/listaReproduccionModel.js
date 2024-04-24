@@ -12,7 +12,7 @@ const listaReproduccionSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',  
         required: true
-    }/*,
+    },
     usuariosRestringidos: [{
         type: Schema.Types.ObjectId,
         ref: 'UsuarioRestringido',
@@ -28,7 +28,7 @@ const listaReproduccionSchema = new Schema({
             },
             message: props => `${props.value.length} perfiles de usuario restringido proporcionados, pero solo ${props.reason} existen en la base de datos.`
         }
-    }]*/
+    }]
 });
 
 const ListaReproduccion = mongoose.model('ListaReproduccion', listaReproduccionSchema);

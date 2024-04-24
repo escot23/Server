@@ -10,10 +10,6 @@ const videoSchema = new Schema({
         type: String,
         required: true
     },
-    descripcion: {
-        type: String,
-        default: ''
-    },
     listaReproduccion: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'ListaReproduccion', 
