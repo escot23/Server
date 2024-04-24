@@ -2,7 +2,7 @@ const ListaReproduccion = require('../models/listaReproduccionModel');
 const Video = require('../models/videomodel');
 const UsuarioRestringidoModel = require('../models/usuarioRestringidoModel');
 
-// Método para crear una nueva lista de reproducción
+// Método para crear una nueva lista de reproducción  _____si
 const PostLista = async (req, res) => {
     const userId = req.user._id;  // ID del usuario principal obtenido del token JWT
     const { nombre, descripcion } = req.body;  
@@ -97,7 +97,7 @@ const getVideosPorLista = async (req, res) => {
     }
 };
 
-// Método para obtener listas de reproducción con sus videos
+// Método para obtener listas de reproducción con sus videos   _____si
 const getListasConVideos = async (req, res) => {
     try {
         const listas = await ListaReproduccion.find({ usuario: req.user._id })
@@ -115,7 +115,7 @@ const getListasConVideos = async (req, res) => {
 
 
 
-
+//sii
 const cargarUsuariosRestringidos = async (req, res) => {
     console.log("Usuario ID:", req.user._id); // Verifica que estás obteniendo el ID correcto.
 
@@ -197,7 +197,7 @@ const agregarVideoALista = async (req, res) => {
         res.status(500).json({ error: 'Error al agregar video a la lista de reproducción' });
     }
 };
-// Método para eliminar una lista de reproducción
+// Método para eliminar una lista de reproducción  ____siiiii
 const eliminarPlaylist = async (req, res) => {
     const { id } = req.params; // Obtén el ID de la lista desde los parámetros de la ruta
 
@@ -240,7 +240,7 @@ const actualizarListaReproduccion = async (req, res) => {
 
 
 
-// Método para obtener todas las listas de reproducción de un usuario con conteo de videos
+// Método para obtener todas las listas de reproducción de un usuario con conteo de videos ____Si
 const getListasReproduccionUsuario = async (req, res) => {
     const userId = req.user._id;  // ID del usuario obtenido del token JWT
 

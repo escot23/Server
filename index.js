@@ -53,7 +53,7 @@ dotenv.config();
 app.use(cookieParser());
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 const PORT = 3000;
 
@@ -95,8 +95,8 @@ function authenticateToken(req, res, next) {
 
 // Rutas para la administración de usuarios restringidos
 app.post('/usuariosrestringido', authenticateToken, PostUsuarioRestringido);
-app.get('/usuariosrestringido/cargar', authenticateToken, GetPinUserPrincipal);
-app.get('/usuariosrestringido/mostrar', authenticateToken, GetListaUsuariosRestringidos);
+app.get('/usuariosrestringido/cargar', authenticateToken, GetPinUserPrincipal);//si
+app.get('/usuariosrestringido/mostrar', authenticateToken, GetListaUsuariosRestringidos);//si
 app.put('/usuariosrestringido/:id', PatchUsuarioRestringido);
 app.delete('/usuariosrestringido/:id', PutUsuarioRestringido);
 app.get('/getdatos', authenticateToken,GetDatos);
@@ -108,26 +108,26 @@ app.post('/login', loginUser);
 
 // Rutas de videos
 app.post('/videos', authenticateToken, PostVideo);
-app.get('/videos', authenticateToken, GetVideo);
-app.put('/videos/:id', authenticateToken, PatchVideo);
-app.delete('/videos/:id', authenticateToken, PutVideo);
+app.get('/videos', authenticateToken, GetVideo);//si
+app.put('/videos/:id', authenticateToken, PatchVideo);//si
+app.delete('/videos/:id', authenticateToken, PutVideo);//si
 app.get('/playlists/:playlistId/videos',authenticateToken, getVideosByLista);
 app.get('/playlists', authenticateToken, getPlaylists);
 
 
 // Rutas para listas de reproducción
-app.post('/usuariosrestringido/crearlista', authenticateToken, PostLista);
-app.post('/usuariosrestringido/videoalista', authenticateToken, addVideoToLista);
-app.get('/usuariosrestringido/listas', authenticateToken, getListasUsuario);
+app.post('/usuariosrestringido/crearlista', authenticateToken, PostLista);  //si
+app.post('/usuariosrestringido/videoalista', authenticateToken, addVideoToLista);///si/si
+app.get('/usuariosrestringido/listas', authenticateToken, getListasUsuario);//si
 app.get('/usuariosrestringido/videos', authenticateToken, GetVideos);
 app.get('/usuariosrestringido/listas/:playlistId/videos', authenticateToken, getVideosPorLista);
-app.get('/usuariosrestringido/listasconvideos', authenticateToken, getListasConVideos);
-app.get('/usuariosrestringido/usuarios', authenticateToken, cargarUsuariosRestringidos);
+app.get('/usuariosrestringido/listasconvideos', authenticateToken, getListasConVideos); //si
+app.get('/usuariosrestringido/usuarios', authenticateToken, cargarUsuariosRestringidos); //si
 app.get('/obtenerListasReproduccion', authenticateToken,obtenerListasReproduccion);
 app.post('/agregarVideoALista', authenticateToken,agregarVideoALista);
-app.delete('/usuariosrestringido/listas/:id', authenticateToken, eliminarPlaylist);
-app.put('/usuariosrestringido/listas/:id', actualizarListaReproduccion);
-app.get('/api/listas', authenticateToken, getListasReproduccionUsuario);
+app.delete('/usuariosrestringido/listas/:id', authenticateToken, eliminarPlaylist); //si
+//app.put('/usuariosrestringido/listas/:id', actualizarListaReproduccion);
+app.get('/api/listas', authenticateToken, getListasReproduccionUsuario);//si
 
 
 // Ruta para autenticar usuarios y generar token JWT
@@ -154,8 +154,9 @@ app.post("/api/session", async (req, res) => {
             }, process.env.JWT_SECRET);
 
             console.log('Token JWT generado:', token);
+            console.log('Usuario generado');
             console.log("res",restrictedUsers);
-            res.status(201).json({ token, hasRestrictedUsers });
+            res.status(201).json({ token, hasRestrictedUsers, userId : user._id});
         } else {
             res.status(401).json({ error: 'Invalid email or password' });
         }

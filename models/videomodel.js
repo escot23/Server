@@ -17,7 +17,7 @@ const videoSchema = new Schema({
     listaReproduccion: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'ListaReproduccion', 
-        required: true 
+        required: false 
     },
     usuario: {
         type: Schema.Types.ObjectId,
