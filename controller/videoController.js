@@ -1,114 +1,73 @@
-const VideoModel = require('../models/videomodel.js');
-const ListaReproduccion = require('../models/listaReproduccionModel');
+const VideoModel = require("../models/videomodel.js");
 
-const PostVideo = async (req, res) => {
+const videofuctions = {
+  GetVideo: async ({ id }) => {
     try {
-        const { nombre, urlYoutube } = req.body;
-        const userId = req.user._id;;
-
-        if (!userId) {
-            console.log("Error: User ID is missing");
-            return res.status(400).json({ error: 'User ID is required.' });
-        }
-
-        const video = new VideoModel({
-            nombre,
-            urlYoutube,
-            usuario: userId
-        });
-
-        console.log("Saving video...");
-        const videoGuardado = await video.save();
-        console.log("Video saved:", videoGuardado);
-        res.status(201).json(videoGuardado);
+      const video = await VideoModel.findById(id);
+      //borrar cuando se quiten los videos viejos del poryecto 1 donde no habia usuario
+      let video2 = video;
+      video2.usuario = video.usuario ? video.usuario : video._id;
+      return video;
     } catch (error) {
-        console.error('Error al crear el video:', error);
-        res.status(500).json({ error: 'Hubo un error al intentar crear el video' });
+      console.error("Error al obtener los videos:", error);
+      return { error: "Hubo un error al obtener los videos" };
     }
-};
-
-
-
-const GetVideo = async (req, res) => {
+  },
+  GetVideos: async () => {
     try {
-        const userId = req.user._id;;  
-        console.log("usuario",userId);
-        const videos = await VideoModel.find({ usuario: userId });
-        console.log(videos);
-
-        if (!videos.length) {
-            return res.status(404).json({ error: 'No se encontraron videos para este usuario' });
-        }
-        res.status(200).json(videos);
+      const videos = await VideoModel.find({});
+      //borrar cuando se quiten los videos viejos del poryecto 1 donde no habia usuario
+      let videos2 = videos.map((video) => {
+        video.usuario = video.usuario ? video.usuario : video._id;
+      });
+      return videos;
     } catch (error) {
-        console.error('Error al obtener los videos:', error);
-        res.status(500).json({ error: 'Hubo un error al obtener los videos' });
+      console.error("Error al obtener videos:", error);
+      return { error: "Error interno del servidor" };
     }
-};
-
-const PatchVideo = async (req, res) => {
+  },
+  GetVideosUser: async ({ iduser }) => {
     try {
-        const { id } = req.params;
-        const { nombre, urlYoutube } = req.body;
-        console.log(id);
-        // Actualizar el video en la base de datos
-        const videoActualizado = await VideoModel.findByIdAndUpdate(id,
-            {
-                nombre,
-                urlYoutube
-            }, { new: true });
-        if (!videoActualizado) {
-            return res.status(404).json({ error: 'No se encontró el video' });
-        }
-        res.status(200).json(videoActualizado);
+      const videos = await VideoModel.find({ usuario: iduser });
+      //borrar cuando se quiten los videos viejos del poryecto 1 donde no habia usuario
+      let videos2 = videos.map((video) => {
+        video.usuario = video.usuario ? video.usuario : video._id;
+      });
+      return videos;
     } catch (error) {
-        console.error('Error al editar el video:', error);
-        res.status(500).json({ error: 'Hubo un error al intentar editar el video' });
+      console.error("Error al obtener los videos:", error);
+      return { error: "Hubo un error al obtener los videos" };
     }
-};
-
-const PutVideo = async (req, res) => {
+  },
+  GetVideosListaReproduccion: async ({ listaReproduccion }) => {
     try {
-        const videoId = req.params.id;
-
-        // Eliminar el video de la base de datos
-        const videoEliminado = await VideoModel.findByIdAndDelete(videoId);
-        if (!videoEliminado) {
-            return res.status(404).json({ error: 'No se encontró el video' });
-        }
-        res.status(200).json({ message: 'Video eliminado correctamente' });
+      const videos = await VideoModel.find({ listaReproduccion: listaReproduccion });
+      //borrar cuando se quiten los videos viejos del poryecto 1 donde no habia usuario
+      let videos2 = videos.map((video) => {
+        video.usuario = video.usuario ? video.usuario : video._id;
+      });
+      return videos;
     } catch (error) {
-        console.error('Error al eliminar el video:', error);
-        res.status(500).json({ error: 'Hubo un error al intentar eliminar el video' });
+      console.error("Error al obtener videos:", error);
+      return { error: "Error interno del servidor" };
     }
-};
+  },
 
-const BuscarVideos = async (req, res) => {
-    const searchTerm = req.query.searchTerm;
-    if (!searchTerm) {
-        return res.status(400).json({ error: "El término de búsqueda es requerido" });
-    }
-
+  // no se que hacen esa sfunciones ya que no entinedo para que las tenias
+  BuscarVideos: async ({ searchTerm }) => {
     try {
-        const videos = await VideoModel.find({
-            $or: [
-                { nombre: { $regex: searchTerm, $options: 'i' } },
-                { descripcion: { $regex: searchTerm, $options: 'i' } }
-            ]
-        });
-        res.status(200).json(videos);
+      const videos = await VideoModel.find({
+        $or: [
+          { nombre: { $regex: searchTerm, $options: "i" } },
+          { descripcion: { $regex: searchTerm, $options: "i" } },
+        ],
+      });
+      return videos;
     } catch (error) {
-        console.error('Error al buscar videos:', error);
-        res.status(500).json({ error: 'Hubo un error al buscar los videos' });
+      console.error("Error al buscar videos:", error);
+      return { error: "Hubo un error al buscar los videos" };
     }
+  },
 };
 
-
-
-module.exports = {
-    PostVideo,
-    GetVideo,
-    PatchVideo,
-    PutVideo,
-    BuscarVideos 
-};
+module.exports = videofuctions;
